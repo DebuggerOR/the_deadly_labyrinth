@@ -1,6 +1,6 @@
 /*import java.util.Vector;
 
-import MathCalculation.MathCalcu;*/
+import math_utils.MathUtils;*/
 
 public class backupHitFunc {
 	/*boolean w1 = isHitOneWall(nextX, yPos, nextZ, wall1);
@@ -125,10 +125,10 @@ public class backupHitFunc {
 	posToDownRight.add(yPos - wall[3][1]);
 	posToDownRight.add(zPos - (wall[3][2] + j));
 	
-	float angle = MathCalcu.angleBetweenVectors(posToUpLeft, posToUpRight) +
-			MathCalcu.angleBetweenVectors(posToUpRight, posToDownLeft) +
-			MathCalcu.angleBetweenVectors(posToDownLeft, posToDownRight) +
-			MathCalcu.angleBetweenVectors(posToDownRight, posToUpLeft);
+	float angle = MathUtils.angleBetweenVectors(posToUpLeft, posToUpRight) +
+			MathUtils.angleBetweenVectors(posToUpRight, posToDownLeft) +
+			MathUtils.angleBetweenVectors(posToDownLeft, posToDownRight) +
+			MathUtils.angleBetweenVectors(posToDownRight, posToUpLeft);
 	
 	//System.out.println(angle);
 	

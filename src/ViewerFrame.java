@@ -1,10 +1,12 @@
-//Inbar Demuth 204885370
-//Yakir Pinchas 203200530
+
 import com.jogamp.opengl.util.FPSAnimator;
 
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLJPanel;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 
 import java.awt.event.ActionEvent;
@@ -12,134 +14,145 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-/**
- * The application frame that handles initialisation and user interaction
- */
+
 public class ViewerFrame extends JFrame implements KeyListener, ActionListener {
     // version ID for serialisation
     private static final long serialVersionUID = 1L;
-    // The JOGL object that handles OpenGL context
-    private GLJPanel jpanel;
-    // The object that renders the scene
+
+    // jpanel, renderer and animator
+    private GLJPanel panel;
     private ViewRenderer renderer;
-    // The Animator object used to control animation frame rates
     private FPSAnimator animator;
 
-    // Menu items used in the program
-    private JMenuItem exitItem;
-    private JMenuItem resetItem;
-    private JMenuItem restartGame;
+    // menu items
+    private JMenuItem menuQuit;
+    private JMenuItem menuReset;
+    private JMenuItem menuAbout;
+    private JMenuItem menuCredits;
+    private JMenuItem menuRestart;
+    private JMenuItem menuMusicStop;
+    private JMenuItem menuMusicStart;
+    private JMenuItem menuInstructions;
+
+    // music
+    private String musicPath = "Theme.wav";
+    private AudioInputStream audioInputStream;
+    private Clip clip;
+
     /**
-     * The main method which runs the application
-     *
-     * @param args The command line arguments
+     * main
      */
     public static void main(String[] args) {
-        // This line initialises some OpenGL features and must come before any other
-        // openGL calls
+        // ogl init
         GLProfile.initSingleton();
-        // Get the default profile
-        GLProfile glp = GLProfile.getDefault();
-        
-        // Create a new frame and make it visible
-        new ViewerFrame("CALL OF DUTY IX", glp);
+        // build this
+        new ViewerFrame("The Deadly Labyrinth", GLProfile.getDefault());
     }
 
     /**
-     * Default constructor.
-     *
-     * @param title   The title of the Frame
-     * @param profile The GLProfile object used to initialise the OpenGL context
+     * constructor
      */
     public ViewerFrame(String title, GLProfile profile) {
-        // Call the parent constructor
         super(title);
 
-        // Setup the frame with some default intial parameters
-        setSize(1920, 1080);
-        setLocationRelativeTo(null);
-        
-        // Add the event listeners
-        addKeyListener(this);
+        // set and init stuff
+        setSize(800, 600);
         setFocusable(true);
+        addKeyListener(this);
+        setLocationRelativeTo(null);
         setFocusTraversalKeysEnabled(false);
 
-        // exit when the close button is pressed
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // Create the OpenGL Capabilities object
         GLCapabilities caps = new GLCapabilities(profile);
 
-        // Create a double buffered GLJPanel
-        jpanel = new GLJPanel(caps);
-        jpanel.setDoubleBuffered(true);
+        this.panel = new GLJPanel(caps);
+        this.panel.setDoubleBuffered(true);
+        this.panel.setIgnoreRepaint(true);
 
-        // The jpanel will update 60 times a second, so we don't need to redraw
-        // on other UI events
-        jpanel.setIgnoreRepaint(true);
+        this.renderer = new ViewRenderer(60);
+        this.panel.addGLEventListener(this.renderer);
+        this.animator = new FPSAnimator(this.panel, 60);
+        getContentPane().add(this.panel);
 
-        // Create a new scene rendering object
-        renderer = new ViewRenderer(60);
-        jpanel.addGLEventListener(renderer);
-
-        // Setup 60fps animator
-        animator = new FPSAnimator(jpanel, 60);
-
-        // Add the panel to the canvas
-        getContentPane().add(jpanel);
-
-        // Build the menus
-        buildMenu();
-
-        // Display window
+        addMenus();
         setVisible(true);
         requestFocusInWindow();
+        this.animator.start();
 
-        // Start the animation
-        animator.start();
-
+        try {
+            // music stuff
+            this.audioInputStream = AudioSystem.getAudioInputStream(this.getClass().getResource(this.musicPath));
+            this.clip = AudioSystem.getClip();
+            this.clip.open(this.audioInputStream);
+        } catch (Exception e) {
+        }
     }
 
     /**
-     * Construct the main menu we are going to use in the program
+     * adds menus to gui
      */
-    private void buildMenu() {
-        // Add the menu bar
+    private void addMenus() {
+        // menu bar
         JMenuBar menuBar = new JMenuBar();
 
-        // Build the file menu
-        JMenu fileMenu = new JMenu("options");
-        
-        // Add an item to reset the user's position in the maze
-        resetItem = new JMenuItem("reset location");
-        resetItem.addActionListener(this);
-        fileMenu.add(resetItem);
-        
-        // add an item to restart the game
-        restartGame = new JMenuItem("restart Game");
-        restartGame.addActionListener(this);
-        fileMenu.add(restartGame);
-        
-        // Add an item to exit the program
-        exitItem = new JMenuItem("quit");
-        exitItem.addActionListener(this);
-        fileMenu.add(exitItem);
-        
-        menuBar.add(fileMenu);
+        // menus
+        JMenu options = new JMenu("options");
+        JMenu music = new JMenu("music");
+        JMenu info = new JMenu("info");
 
-        // Add the menu bar to this Frame
+        // add reset location
+        this.menuReset = new JMenuItem("reset location");
+        this.menuReset.addActionListener(this);
+        options.add(this.menuReset);
+
+        // add restart
+        this.menuRestart = new JMenuItem("restart game");
+        this.menuRestart.addActionListener(this);
+        options.add(this.menuRestart);
+
+        // add quit
+        this.menuQuit = new JMenuItem("quit");
+        this.menuQuit.addActionListener(this);
+        options.add(this.menuQuit);
+
+        // add instructions
+        this.menuInstructions = new JMenuItem("instructions");
+        this.menuInstructions.addActionListener(this);
+        info.add(this.menuInstructions);
+
+        // add about
+        this.menuAbout = new JMenuItem("about");
+        this.menuAbout.addActionListener(this);
+        info.add(this.menuAbout);
+
+        // add about
+        this.menuCredits = new JMenuItem("credits");
+        this.menuCredits.addActionListener(this);
+        info.add(this.menuCredits);
+
+        // add music start
+        this.menuMusicStart = new JMenuItem("start music");
+        this.menuMusicStart.addActionListener(this);
+        music.add(this.menuMusicStart);
+
+        // add music stop
+        this.menuMusicStop = new JMenuItem("stop music");
+        this.menuMusicStop.addActionListener(this);
+        music.add(this.menuMusicStop);
+
+        // add to menu bar and add menu bar
+        menuBar.add(options);
+        menuBar.add(music);
+        menuBar.add(info);
         setJMenuBar(menuBar);
-
     }
 
     /**
-     * This function is called when a key is pressed so we can get the keypresses and act on them
-     * @param key The KeyEvent object which lets us know what key was pressed
+     * key pressed
      */
     @Override
     public void keyPressed(KeyEvent key) {
         switch (key.getKeyCode()) {
-            // move the player position on the z and x axis
             case KeyEvent.VK_W:
                 renderer.moveForward(true);
                 break;
@@ -152,60 +165,42 @@ public class ViewerFrame extends JFrame implements KeyListener, ActionListener {
             case KeyEvent.VK_D:
                 renderer.moveRight(true);
                 break;
-                
-             //move the camera
-            case KeyEvent.VK_UP:
-                renderer.turnUp(true);
-                break;
-            case KeyEvent.VK_DOWN:
-                renderer.turnDown(true);
-                break;
+            // move camera
             case KeyEvent.VK_LEFT:
                 renderer.turnLeft(true);
                 break;
             case KeyEvent.VK_RIGHT:
                 renderer.turnRight(true);
                 break;
-                
-            //TURE ON THE Z AXIS
-            case KeyEvent.VK_Q:
-            	renderer.turnZUp(true);
-                break;
-            case KeyEvent.VK_E:
-            	renderer.turnZDown(true);
-                break;
-                
-            // if jump
+//            case KeyEvent.VK_UP:
+//                renderer.turnUp(true);
+//                break;
+//            case KeyEvent.VK_DOWN:
+//                renderer.turnDown(true);
+//                break;
+            // z axis
+//            case KeyEvent.VK_Q:
+//                renderer.turnZUp(true);
+//                break;
+//            case KeyEvent.VK_E:
+//                renderer.turnZDown(true);
+//                break;
+            // jump
             case KeyEvent.VK_SPACE:
-            	renderer.doJump();
-            	break;
-            // game info	
-            case KeyEvent.VK_F1:
-            	renderer.showGameDetails();
-            	break;
-            //if user want to move to next level
-            case KeyEvent.VK_F2:
-          		renderer.setLevelTwo();
-          		break;
-            // If the user presses escape, exit the program
-            case KeyEvent.VK_ESCAPE:
-                System.exit(0);
+                renderer.jump();
                 break;
-            // If it wasn't one of those keys, do nothing
             default:
                 break;
         }
     }
 
     /**
-     * Called when a keypress is released.
+     * key released
      */
     @Override
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
-        	//player not move.
-        	// move the player position on the z and x axis
-        	case KeyEvent.VK_W:
+            case KeyEvent.VK_W:
                 renderer.moveForward(false);
                 break;
             case KeyEvent.VK_S:
@@ -217,61 +212,76 @@ public class ViewerFrame extends JFrame implements KeyListener, ActionListener {
             case KeyEvent.VK_D:
                 renderer.moveRight(false);
                 break;
-                
-             //move the camera
-            case KeyEvent.VK_UP:
-                renderer.turnUp(false);
-                break;
-            case KeyEvent.VK_DOWN:
-                renderer.turnDown(false);
-                break;
+            // move camera
             case KeyEvent.VK_LEFT:
                 renderer.turnLeft(false);
                 break;
             case KeyEvent.VK_RIGHT:
                 renderer.turnRight(false);
                 break;
-            //TURE ON THE Z AXIS
-            case KeyEvent.VK_Q:
-            	renderer.turnZUp(false);
-                break;
-            case KeyEvent.VK_E:
-            	renderer.turnZDown(false);
-                break;
-            	
-            // If it wasn't one of those keys, do nothing
+//            case KeyEvent.VK_UP:
+//                renderer.turnUp(false);
+//                break;
+//            case KeyEvent.VK_DOWN:
+//                renderer.turnDown(false);
+//                break;
+            // z axis
+//            case KeyEvent.VK_Q:
+//                renderer.turnZUp(false);
+//                break;
+//            case KeyEvent.VK_E:
+//                renderer.turnZDown(false);
+//                break;
             default:
                 break;
         }
     }
 
-    /**
-     * Called when a letter key is typed. Not used in this programme.
-     */
     @Override
     public void keyTyped(KeyEvent e) {
     }
 
     /**
-    * Override of the actionPerformed method defined in the ActionListener interface.
-    * Called every time a menu item is activated.
-    * @param ActionEvent the object which triggered this action event. In this case
-    *                    the object lets us know which menu item was selected
-    */
+     * action performed
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
-        // Determine which menu item is selected and act appropriately
-        if (e.getSource().equals(exitItem)) {
-            // Exit was selected - exit the program
-            System.exit(0);
-        }
-        if (e.getSource().equals(resetItem)) {
-            // Reset was selected - restart the position
-            renderer.reset();
-        }
-        if (e.getSource().equals(restartGame)) {
-            // restart the game
-            renderer.restartGame();
+        try {
+            // exit
+            if (e.getSource().equals(this.menuQuit)) {
+                JOptionPane.showMessageDialog(null, "See ya!");
+                System.exit(0);
+
+                // reset location
+            } else if (e.getSource().equals(this.menuReset)) {
+                this.renderer.reset();
+
+                // restart game
+            } else if (e.getSource().equals(this.menuRestart)) {
+                this.renderer.restartGame();
+
+                // instructions
+            } else if (e.getSource().equals(this.menuInstructions)) {
+                this.renderer.showGameDetails();
+
+                // about TODO show about image
+            } else if (e.getSource().equals(this.menuAbout)) {
+                this.renderer.showGameDetails();
+
+                // credits for oren, the music etc TODO
+            } else if (e.getSource().equals(this.menuCredits)) {
+                this.renderer.showGameDetails();
+
+                // music start
+            } else if (e.getSource().equals(this.menuMusicStart)) {
+                this.clip.start();
+                this.clip.loop(Clip.LOOP_CONTINUOUSLY);
+
+                // music stop
+            } else if (e.getSource().equals(this.menuMusicStop)) {
+                this.clip.stop();// about TODO show about image
+            }
+        } catch (Exception ex) {
         }
     }
 }

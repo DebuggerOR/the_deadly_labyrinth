@@ -534,11 +534,9 @@ public class ViewRenderer implements GLEventListener {
     }
 
     /**
-     * do jump
-     *
-     * @param jump
+     * jump.
      */
-    public void doJump() {
+    public void jump() {
         if (jumpState == PlayerState.WALKING) {
             jumpState = PlayerState.JUMPING_UP;
         }

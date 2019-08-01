@@ -254,7 +254,7 @@ public class Cell {
     	playerToWall1.add(nextX - (i + wall1[0][0]));
     	playerToWall1.add(nextY - wall1[0][1]);
     	playerToWall1.add(nextZ - (j + wall1[0][2]));
-    	float distanceWall1 = MathCalcu.dotProduct(playerToWall1, axisXNormal);*/
+    	float distanceWall1 = MathUtils.dotProduct(playerToWall1, axisXNormal);*/
     	float distanceWall1 = nextX - (i + wall1[0][0]);
     	
     	//distance from wall2 to the player
@@ -262,7 +262,7 @@ public class Cell {
     	playerToWall2.add(nextX - (i + wall2[0][0]));
     	playerToWall2.add(nextY - wall2[0][1]);
     	playerToWall2.add(nextZ - (j + wall2[0][2]));
-    	float distanceWall2 = MathCalcu.dotProduct(playerToWall2, axisXNormal);*/
+    	float distanceWall2 = MathUtils.dotProduct(playerToWall2, axisXNormal);*/
     	float distanceWall2 = nextX - (i + wall2[0][0]);
     	
     	//distance from wall3 to the player
@@ -270,7 +270,7 @@ public class Cell {
     	playerToWall3.add(nextX - (i + wall3[0][0]));
     	playerToWall3.add(nextY - wall3[0][1]);
     	playerToWall3.add(nextZ - (j + wall3[0][2]));
-    	float distanceWall3 = MathCalcu.dotProduct(playerToWall3, axisZNormal);*/
+    	float distanceWall3 = MathUtils.dotProduct(playerToWall3, axisZNormal);*/
     	float distanceWall3 = nextZ - (j + wall3[0][2]);
     	
     	//distance from wall4 to the player
@@ -278,7 +278,7 @@ public class Cell {
     	playerToWall4.add(nextX - (i + wall4[0][0]));
     	playerToWall4.add(nextY - wall4[0][1]);
     	playerToWall4.add(nextZ - (j + wall4[0][2]));
-    	float distanceWall4 = MathCalcu.dotProduct(playerToWall4, axisZNormal);*/
+    	float distanceWall4 = MathUtils.dotProduct(playerToWall4, axisZNormal);*/
     	float distanceWall4 = nextZ - (j + wall4[0][2]);
     	
     	//check if there is collision

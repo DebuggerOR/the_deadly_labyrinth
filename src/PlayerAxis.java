@@ -1,5 +1,5 @@
 
-import MathCalculation.MathCalcu;
+import math_utils.MathUtils;
 
 public class PlayerAxis {
 	//player coordinate
@@ -63,28 +63,28 @@ public class PlayerAxis {
 		
 		switch(axis) {
 		case "x":
-			new_z = MathCalcu.addVectors(
-					MathCalcu.multVecScalar(z, MathCalcu.COS(alfa)), 
-					MathCalcu.multVecScalar(y, MathCalcu.SIN(alfa)));
-			new_y = MathCalcu.subVectors(
-					MathCalcu.multVecScalar(y, MathCalcu.COS(alfa)), 
-					MathCalcu.multVecScalar(z, MathCalcu.SIN(alfa)));
+			new_z = MathUtils.addVectors(
+					MathUtils.multVecScalar(z, MathUtils.COS(alfa)),
+					MathUtils.multVecScalar(y, MathUtils.SIN(alfa)));
+			new_y = MathUtils.subVectors(
+					MathUtils.multVecScalar(y, MathUtils.COS(alfa)),
+					MathUtils.multVecScalar(z, MathUtils.SIN(alfa)));
 			break;
 		case "y":
-			new_x = MathCalcu.addVectors(
-					MathCalcu.multVecScalar(x, MathCalcu.COS(alfa)), 
-					MathCalcu.multVecScalar(z, MathCalcu.SIN(alfa)));
-			new_z = MathCalcu.subVectors(
-					MathCalcu.multVecScalar(z, MathCalcu.COS(alfa)), 
-					MathCalcu.multVecScalar(x, MathCalcu.SIN(alfa)));
+			new_x = MathUtils.addVectors(
+					MathUtils.multVecScalar(x, MathUtils.COS(alfa)),
+					MathUtils.multVecScalar(z, MathUtils.SIN(alfa)));
+			new_z = MathUtils.subVectors(
+					MathUtils.multVecScalar(z, MathUtils.COS(alfa)),
+					MathUtils.multVecScalar(x, MathUtils.SIN(alfa)));
 			break;
 		case "z":
-			new_x = MathCalcu.addVectors(
-					MathCalcu.multVecScalar(x, MathCalcu.COS(alfa)), 
-					MathCalcu.multVecScalar(y, MathCalcu.SIN(alfa)));
-			new_y = MathCalcu.subVectors(
-					MathCalcu.multVecScalar(y, MathCalcu.COS(alfa)), 
-					MathCalcu.multVecScalar(x, MathCalcu.SIN(alfa)));
+			new_x = MathUtils.addVectors(
+					MathUtils.multVecScalar(x, MathUtils.COS(alfa)),
+					MathUtils.multVecScalar(y, MathUtils.SIN(alfa)));
+			new_y = MathUtils.subVectors(
+					MathUtils.multVecScalar(y, MathUtils.COS(alfa)),
+					MathUtils.multVecScalar(x, MathUtils.SIN(alfa)));
 		}
 		
 		x = new_x;
@@ -174,16 +174,16 @@ public class PlayerAxis {
 	 * @return
 	 */
 	public float[] transVector(float[] v) {
-		return MathCalcu.multiplyMatrixInVector(coordiTrans, v);
+		return MathUtils.multiplyMatrixInVector(coordiTrans, v);
 	}
 	
 	/**
 	 * normalize the player coordinate
 	 */
 	public void normalization() {
-		float x_len = MathCalcu.vectorLen(x);
-		float y_len = MathCalcu.vectorLen(y);
-		float z_len = MathCalcu.vectorLen(z);
+		float x_len = MathUtils.vectorLen(x);
+		float y_len = MathUtils.vectorLen(y);
+		float z_len = MathUtils.vectorLen(z);
 		
 		for (int i = 0; i < 3; i++) {
 			x[i] = x[i] / x_len;
