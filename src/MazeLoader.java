@@ -8,7 +8,6 @@ import java.util.ArrayList;
  * Maze Loader, loads a maze from a text file
  */
 public class MazeLoader {
-
     /**
      * Static function to load a maze from the contents of a file.
      * The maze is loaded from a text file which stores the maze like
@@ -30,21 +29,21 @@ public class MazeLoader {
      * @return A list of Cell objects that make up the maze
      */
     static public ArrayList<Cell> MakeMaze(String filename) {
-        // Variables to store the data in the file
+        // variables to store the data in the file
         int[] _dimensions = {0, 0};
         String[] _maze_string = {};
 
-        // Read the data from the file
+        // read the data from the file
         try {
             BufferedReader input = new BufferedReader(new FileReader(filename));
             try {
-                // Read the dimensions
+                // read the dimensions
                 _dimensions[0] = Integer.parseInt(input.readLine());
                 _dimensions[1] = Integer.parseInt(input.readLine());
-                // Read the maze data
+                // read the maze data
                 _maze_string = new String[_dimensions[0]];
                 for (int i = 0; i < _dimensions[0]; i++) {
-                    // Read in lines in reverse order otherwise the grid layout gets reflected                    
+                    // read in lines in reverse order otherwise the grid layout gets reflected
                     _maze_string[_dimensions[0] - i - 1] = input.readLine();
                 }
             } finally {
