@@ -8,7 +8,6 @@ import java.util.Vector;
  *
  */
 public class BS extends Shape{
-	
 	private Vector<Float> center;
 	private float radius;
 	

@@ -1,67 +1,67 @@
 package Collision;
 
 public class AABB extends Shape {
-	private float x_max;
-	private float y_max;
-	private float z_max;
-	private float x_min;
-	private float y_min;
-	private float z_min;
+	private float xMax;
+	private float yMax;
+	private float zMax;
+	private float xMin;
+	private float yMin;
+	private float zMin;
 	
-	public AABB(float x_max, float y_max, float z_max, float x_min, float y_min, float z_min) {
-		this.setX_max(x_max);
-		this.setY_max(y_max);
-		this.setZ_max(z_max);
-		this.setX_min(x_min);
-		this.setY_min(y_min);
-		this.setZ_min(z_min);
+	public AABB(float xMax, float yMax, float zMax, float xMin, float yMin, float zMin) {
+		this.xMax = xMax;
+		this.yMax = yMax;
+		this.zMax = zMax;
+		this.xMin = xMin;
+		this.yMin = yMin;
+		this.zMin = zMin;
 	}
 
-	public float getZ_min() {
-		return z_min;
+	public float getZMin() {
+		return this.zMin;
 	}
 
-	public void setZ_min(float z_min) {
-		this.z_min = z_min;
+	public void setZMin(float zMin) {
+		this.zMin = zMin;
 	}
 
-	public float getY_min() {
-		return y_min;
+	public float getYMin() {
+		return this.yMin;
 	}
 
-	public void setY_min(float y_min) {
-		this.y_min = y_min;
+	public void setYMin(float yMin) {
+		this.yMin = yMin;
 	}
 
-	public float getX_min() {
-		return x_min;
+	public float getXMin() {
+		return this.xMin;
 	}
 
-	public void setX_min(float x_min) {
-		this.x_min = x_min;
+	public void setXMin(float xMin) {
+		this.xMin = xMin;
 	}
 
-	public float getZ_max() {
-		return z_max;
+	public float getZMax() {
+		return this.zMax;
 	}
 
-	public void setZ_max(float z_max) {
-		this.z_max = z_max;
+	public void setZMax(float zMax) {
+		this.zMax = zMax;
 	}
 
-	public float getY_max() {
-		return y_max;
+	public float getYMax() {
+		return this.yMax;
 	}
 
-	public void setY_max(float y_max) {
-		this.y_max = y_max;
+	public void setYMax(float yMax) {
+		this.yMax = yMax;
 	}
 
-	public float getX_max() {
-		return x_max;
+	public float getXMax() {
+		return this.xMax;
 	}
 
-	public void setX_max(float x_max) {
-		this.x_max = x_max;
+	public void setXMax(float xMax) {
+		this.xMax = xMax;
 	}
 }

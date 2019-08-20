@@ -1,15 +1,11 @@
-//Inbar Demuth 204885370
-//Yakir Pinchas 203200530
+
 import com.jogamp.opengl.util.texture.Texture;
 import java.util.Vector;
 import javax.media.opengl.GL2;
 
-/**
- * Cell, class representing a cell in the maze
- */
-public class Cell {
 
-    //Define the sets of coordinates that will make up the walls, floors and ceiling
+public class Cell {
+    // coordinates for walls, floors and ceiling
     private float[][] wall1 = {{-0.5f, 0.5f, 0.5f},
             {-0.5f, -0.5f, 0.5f},
             {-0.5f, -0.5f, -0.5f},
@@ -47,7 +43,7 @@ public class Cell {
     private float i;
     private float j;
     //The maze object containing the start/end properties of the maze
-    private MazeCellObj obj;
+    private GameObj obj;
     private boolean haveObj = false;
     //The drawlist variable
     private int rectList = -1;
@@ -87,7 +83,7 @@ public class Cell {
      * add obj to the cell
      * @param obj
      */
-    public void addItem(MazeCellObj obj) {
+    public void addItem(GameObj obj) {
         //Add the maze object to the list of variables
         this.obj = obj;
         haveObj = true;
@@ -311,7 +307,7 @@ public class Cell {
      * @param objRadius
      * @return
      */
-    public MazeCellObj.ObjType isHitObj(float nextX, float nextY, float nextZ, float objRadius) {
+    public GameObj.ObjType isHitObj(float nextX, float nextY, float nextZ, float objRadius) {
     	
     	//if there is an object in the cell
     	if (haveObj) {
@@ -320,14 +316,14 @@ public class Cell {
     		float xDistance = Math.abs((i - nextX));
     		float zDistance = Math.abs((j - nextZ));
     		float yDistance;
-    		if (obj.getObjType() == MazeCellObj.ObjType.END) {
+    		if (obj.getObjType() == GameObj.ObjType.END) {
     			yDistance = Math.abs((-0.2f - nextY));
     		} else {
     			yDistance = Math.abs((-0.5f - nextY));
     		}
     		
     		//if it's a dmg obj change the radius
-    		if (obj.getObjType() == MazeCellObj.ObjType.DAMAGE) {
+    		if (obj.getObjType() == GameObj.ObjType.DAMAGE) {
     			objRadius += 0.1;
     		}
     		
@@ -341,7 +337,7 @@ public class Cell {
     	}
     	
     	//if we didnt hit an object, return none
-    	return MazeCellObj.ObjType.NONE;
+    	return GameObj.ObjType.NONE;
     }
     
     public void deleteCellObj() {

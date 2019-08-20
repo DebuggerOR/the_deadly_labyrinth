@@ -5,7 +5,6 @@ import java.util.Vector;
 import math_utils.MathUtils;
 
 public class OBB extends Shape {
-	
 	private Vector<Float> center;
 	
 	//the box coordinates

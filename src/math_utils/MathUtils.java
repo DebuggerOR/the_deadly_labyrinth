@@ -1,5 +1,4 @@
-//Inbar Demuth 204885370
-//Yakir Pinchas 203200530
+
 package math_utils;
 
 import java.util.Vector;

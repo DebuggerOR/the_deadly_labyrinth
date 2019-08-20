@@ -11,30 +11,22 @@ import java.io.File;
 import java.util.ArrayList;
 
 
-/**
- * A View rendering class that handles all the OpenGL code.
- * This class creates a world with the following conventions:
- * y is up
- * the default color is white
- * the default matrix is the modelview matrix
- */
 public class ViewRenderer implements GLEventListener {
-
-    // The current time for global animation
+    // current time for global animation
     private int time = 0;
-    // The amount to update time
+    // delta update time
     private int deltaT = 1;
-    // The maximum number of frames to skip
+    // max num of frames to skip
     private int maxFrameSkip = 10;
-    // The delay between time updates
+    // delay between time updates
     private long delay;
-    // The time last time we checked
+    // last time we checked
     private long lastTime;
 
-    //Camera X position
+    // x,z camera pos
     private static float initXPos;
-    //Camera Z position
     private static float initZPos;
+
     //the min point of the player stand
     static float playerFloor = -0.2f;
     //the movement args
@@ -56,22 +48,22 @@ public class ViewRenderer implements GLEventListener {
     //end game key
     private int reachEndKey = 0;
     //player keys
-    private Image key1;
-    private Image key2;
+    private ImageDrawer key1;
+    private ImageDrawer key2;
     //player health
-    private HealthBar healthBar;
+    private LifeStatus healthBar;
     //hp image
-    private Image hpImg;
+    private ImageDrawer hpImg;
     //game details image
-    private Image details;
+    private ImageDrawer details;
     //game over screen
-    private Image gameOver;
+    private ImageDrawer gameOver;
     //win screen
-    private Image win;
+    private ImageDrawer win;
     //level two title
-    private Image levelTwoTitle;
-    //HUD list for draw in 2D
-    private ArrayList<HUD> objDraw2D;
+    private ImageDrawer levelTwoTitle;
+    //TDDrawable list for draw in 2D
+    private ArrayList<TDDrawable> objDraw2D;
     //the level we want to draw
     private int levelDraw = 1;
     //play level
@@ -159,7 +151,7 @@ public class ViewRenderer implements GLEventListener {
                 //decrease the lives in 1
                 healthBar.decreaseHP(1);
                 //if not lives
-                if (healthBar.getHealth() == 0) {
+                if (healthBar.getHealthPoints() == 0) {
                     //message that lives it's over
                     defete();
                     return;
@@ -198,7 +190,7 @@ public class ViewRenderer implements GLEventListener {
                     //decrease his lives
                     healthBar.decreaseHP(2);
                     //check if live is over.
-                    if (healthBar.getHealth() == 0) {
+                    if (healthBar.getHealthPoints() == 0) {
                         //send messeage that lives it's over
                         defete();
                         return;
@@ -322,33 +314,33 @@ public class ViewRenderer implements GLEventListener {
 
         //Load the image files to be used as textures
         try {
-            textures[0] = TextureIO.newTexture(new File("textures/wall.jpg"), true);
-            textures[1] = TextureIO.newTexture(new File("textures/floor.jpg"), true);
-            textures[2] = TextureIO.newTexture(new File("textures/ceiling.jpg"), true);
+            textures[0] = TextureIO.newTexture(new File("textures/wall1.jpg"), true);
+            textures[1] = TextureIO.newTexture(new File("textures/floor1.jpg"), true);
+            textures[2] = TextureIO.newTexture(new File("textures/ceiling1.jpg"), true);
         } catch (Exception e) {
             System.out.println("Error: cannot load textures");
             e.printStackTrace();
         }
 
         //create health bar
-        healthBar = new HealthBar();
-        hpImg = new Image("textures/hp.png", new float[][]{{-0.48f, 0.2f}, {-0.48f, -0.4f}, {-0.1f, -0.4f}, {-0.1f, 0.2f}});
+        healthBar = new LifeStatus();
+        hpImg = new ImageDrawer("textures/hp.png", new float[][]{{-0.48f, 0.2f}, {-0.48f, -0.4f}, {-0.1f, -0.4f}, {-0.1f, 0.2f}});
         hpImg.loadImage();
         //create player key image when find one
-        key1 = new Image("textures/key.jpg", new float[][]{{9.2f, -8.8f}, {9.2f, -9.5f}, {9.7f, -9.5f}, {9.7f, -8.8f}});
+        key1 = new ImageDrawer("textures/key.jpg", new float[][]{{9.2f, -8.8f}, {9.2f, -9.5f}, {9.7f, -9.5f}, {9.7f, -8.8f}});
         key1.loadImage();
-        key2 = new Image("textures/key.jpg", new float[][]{{8.6f, -8.8f}, {8.6f, -9.5f}, {9.1f, -9.5f}, {9.1f, -8.8f}});
+        key2 = new ImageDrawer("textures/key.jpg", new float[][]{{8.6f, -8.8f}, {8.6f, -9.5f}, {9.1f, -9.5f}, {9.1f, -8.8f}});
         key2.loadImage();
         //create game details image
-        details = new Image("textures/details.png", new float[][]{{1.5f, -0.8f}, {1.5f, -8.7f}, {8.0f, -8.7f}, {8.0f, -0.8f}});
+        details = new ImageDrawer("textures/details.png", new float[][]{{1.5f, -0.8f}, {1.5f, -8.7f}, {8.0f, -8.7f}, {8.0f, -0.8f}});
         details.loadImage();
         //create level two title
-        levelTwoTitle = new Image("textures/levelTwo.png", new float[][]{{1.0f, -2.3f}, {1.0f, -7.2f}, {8.5f, -7.2f}, {8.5f, -2.3f}});
+        levelTwoTitle = new ImageDrawer("textures/levelTwo.png", new float[][]{{1.0f, -2.3f}, {1.0f, -7.2f}, {8.5f, -7.2f}, {8.5f, -2.3f}});
         levelTwoTitle.loadImage();
         //game over / win screen
-        gameOver = new Image("textures/gameover.png", new float[][]{{1.0f, -3.0f}, {1.0f, -6.0f}, {8.5f, -6.0f}, {8.5f, -3.0f}});
+        gameOver = new ImageDrawer("textures/gameover.png", new float[][]{{1.0f, -3.0f}, {1.0f, -6.0f}, {8.5f, -6.0f}, {8.5f, -3.0f}});
         gameOver.loadImage();
-        win = new Image("textures/win.png", new float[][]{{1.0f, -3.0f}, {1.0f, -6.0f}, {8.5f, -6.0f}, {8.5f, -3.0f}});
+        win = new ImageDrawer("textures/win.png", new float[][]{{1.0f, -3.0f}, {1.0f, -6.0f}, {8.5f, -6.0f}, {8.5f, -3.0f}});
         win.loadImage();
 
         //set the texture wrap
@@ -388,7 +380,7 @@ public class ViewRenderer implements GLEventListener {
         gl.glEndList();
 
         //set the list of the objects that will be draw in 2D
-        objDraw2D = new ArrayList<HUD>();
+        objDraw2D = new ArrayList<TDDrawable>();
         objDraw2D.add(hpImg);
         objDraw2D.add(healthBar);
 
@@ -584,7 +576,7 @@ public class ViewRenderer implements GLEventListener {
      * @param gl
      * @param obj
      */
-    public void drawHUD(GL2 gl, ArrayList<HUD> objDraw2D2) {
+    public void drawHUD(GL2 gl, ArrayList<TDDrawable> objDraw2D2) {
 
         //set to ortho matrix to draw in 2d
         gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
@@ -596,7 +588,7 @@ public class ViewRenderer implements GLEventListener {
         gl.glLoadIdentity();
 
         //draw the objects that we want to draw in 2d
-        for (HUD obj : objDraw2D2) {
+        for (TDDrawable obj : objDraw2D2) {
             obj.draw2D(gl);
         }
 
@@ -656,7 +648,7 @@ public class ViewRenderer implements GLEventListener {
             objDraw2D.remove(details);
         }
         //if the player in stage 1 , he player the game again and he gain full lives
-        healthBar.setHealth();
+        healthBar.initHealthPoints();
         finishGame = false;
     }
 

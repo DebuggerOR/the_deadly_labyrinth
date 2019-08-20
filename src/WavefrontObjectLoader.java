@@ -1,5 +1,4 @@
-//Inbar Demuth 204885370
-//Yakir Pinchas 203200530
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +14,6 @@ import javax.media.opengl.GL2;
 import com.jogamp.common.nio.Buffers;
 
 public class WavefrontObjectLoader {
-
     private String OBJModelPath; //the path to the model file
     public ArrayList<float[]> vData = new ArrayList<float[]>(); //list of vertex coordinates
     private ArrayList<float[]> vtData = new ArrayList<float[]>(); //list of texture coordinates

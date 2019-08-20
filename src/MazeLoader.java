@@ -1,5 +1,4 @@
-//Inbar Demuth 204885370
-//Yakir Pinchas 203200530
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -82,23 +81,23 @@ public class MazeLoader {
                     // If this cell is the start or end point, add the appropriate marker
                     Cell new_cell = new Cell(walls, i, j);
                     if (_maze_string[i].charAt(j) == 's') {
-                        new_cell.addItem(new MazeCellObj(MazeCellObj.ObjType.START));
+                        new_cell.addItem(new GameObj(GameObj.ObjType.START));
                     }
                     //create end stage object
                     if (_maze_string[i].charAt(j) == 'e') {
-                        new_cell.addItem(new MazeCellObj(MazeCellObj.ObjType.END));
+                        new_cell.addItem(new GameObj(GameObj.ObjType.END));
                     }
                     //create heal object
                     if (_maze_string[i].charAt(j) == 'h') {
-                        new_cell.addItem(new MazeCellObj(MazeCellObj.ObjType.HEAL));
+                        new_cell.addItem(new GameObj(GameObj.ObjType.HEAL));
                     }
                     //create decrease live object
                     if (_maze_string[i].charAt(j) == 'd') {
-                        new_cell.addItem(new MazeCellObj(MazeCellObj.ObjType.DAMAGE));
+                        new_cell.addItem(new GameObj(GameObj.ObjType.DAMAGE));
                     }
                     //create key object for this stage
                     if (_maze_string[i].charAt(j) == 'k') {
-                        new_cell.addItem(new MazeCellObj(MazeCellObj.ObjType.ENDKEY));
+                        new_cell.addItem(new GameObj(GameObj.ObjType.ENDKEY));
                     }
                     // Add this cell to the maze
                     maze.add(new_cell);
