@@ -14,14 +14,21 @@ public class MazeLoader {
      * so:
      * 5
      * 9
-     * xsoxxoxxo
-     * xooxooxoo
-     * xxxxoxxxx
-     * oooxooxox
-     * oxxxxxxoe
+     * 10
+     * 9
+     * -s#-h#h-#
+     * k##-##-##
+     * -#d----d-
+     * -###-#-#k
+     * ---d---##
+     * --##h#--#
+     * -##-##-##
+     * -d--#---d
+     * ###-##h#-
+     * #h-d--##e
      * The first two lines are the dimensions of the maze. Then follows
      * the layout of the maze. Each cell in the maze is represented as
-     * a character. An 'x' represents an open space in the maze, an 'o'
+     * a character. An '-' represents an open space in the maze, an '#'
      * represents an occupied space (walls) and 's' and 'e' are the
      * start and end of the maze respectively.
      *
@@ -60,20 +67,20 @@ public class MazeLoader {
         for (int i = 0; i < _dimensions[0]; ++i) {
             for (int j = 0; j < _dimensions[1]; ++j) {
                 // If that space in the grid is not occupied...
-                if (_maze_string[i].charAt(j) != 'o') {
+                if (_maze_string[i].charAt(j) != '#') {
                     // Start with a cell with four walls
                     boolean[] walls = {true, true, true, true};
                     // Look at the neighbouring cells. If they are not occupied remove the wall
-                    if (i > 0 && _maze_string[i - 1].charAt(j) != 'o') {
+                    if (i > 0 && _maze_string[i - 1].charAt(j) != '#') {
                         walls[0] = false;
                     }
-                    if (i < (_dimensions[0] - 1) && _maze_string[i + 1].charAt(j) != 'o') {
+                    if (i < (_dimensions[0] - 1) && _maze_string[i + 1].charAt(j) != '#') {
                         walls[1] = false;
                     }
-                    if (j > 0 && _maze_string[i].charAt(j - 1) != 'o') {
+                    if (j > 0 && _maze_string[i].charAt(j - 1) != '#') {
                         walls[2] = false;
                     }
-                    if (j < (_dimensions[1] - 1) && _maze_string[i].charAt(j + 1) != 'o') {
+                    if (j < (_dimensions[1] - 1) && _maze_string[i].charAt(j + 1) != '#') {
                         walls[3] = false;
                     }
 

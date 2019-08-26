@@ -1,5 +1,6 @@
 
 import com.jogamp.opengl.util.texture.Texture;
+
 import java.util.Vector;
 import javax.media.opengl.GL2;
 
@@ -47,11 +48,11 @@ public class Cell {
     private boolean haveObj = false;
     //The drawlist variable
     private int rectList = -1;
-    
+
     ///normal for collision
     Vector<Float> axisXNormal = new Vector<Float>(3);
     Vector<Float> axisZNormal = new Vector<Float>(3);
-	
+
     public Cell(boolean[] walls, float i, float j) {
         // This constructor gets passed three parameters
         // The first is a list of booleans listing whether
@@ -68,19 +69,20 @@ public class Cell {
         this.j = j;
         // Take the rectangle render list for drawing walls etc
         this.rectList = ViewRenderer.rectList;
-        
+
         //set the normals for the collision
         axisXNormal.add(1f);
-    	axisXNormal.add(0f);
-    	axisXNormal.add(0f);
-    	axisZNormal.add(0f);
-    	axisZNormal.add(0f);
-    	axisZNormal.add(1f);
+        axisXNormal.add(0f);
+        axisXNormal.add(0f);
+        axisZNormal.add(0f);
+        axisZNormal.add(0f);
+        axisZNormal.add(1f);
     }
 
-    
+
     /**
      * add obj to the cell
+     *
      * @param obj
      */
     public void addItem(GameObj obj) {
@@ -93,9 +95,7 @@ public class Cell {
     }
 
     public void draw(Texture[] textures, GL2 gl) {
-
         gl.glPushMatrix();
-
 
         //Move the current cell of the maze according to its relative position
         gl.glTranslatef(i, 0.0f, j);
@@ -178,7 +178,7 @@ public class Cell {
 
         //If the maze's end-point object exists, invoke its draw method
         if (haveObj) obj.draw(gl);
-        
+
         gl.glPopMatrix();
     }
 
@@ -192,7 +192,6 @@ public class Cell {
      * @param gl The openGL context
      */
     public void setNormal(float[] a, float[] b, float[] c, GL2 gl) {
-
         //Create the vectors to apply the cross product on
         float v1[] = new float[3];
         float v2[] = new float[3];
@@ -221,86 +220,88 @@ public class Cell {
         //Send the normalization command with the vector to the GL context
         gl.glNormal3fv(vN, 0);
     }
-    
+
     /**
-     * get the next step of the player and the radius of the player. 
+     * get the next step of the player and the radius of the player.
      * first if the next step is not close to this cell - then return false, no collision.
-     * else, use the Bounding Sphere method when the center is the player position. 
+     * else, use the Bounding Sphere method when the center is the player position.
      * the normal are always the z axis and the x axis,
      * so to make it shorter - just calculate the x or the z distance.
+     *
      * @param nextX next x
      * @param nextY next y
      * @param nextZ next z
      * @return true if there is collision, else false
      */
     public boolean isHit(float nextX, float nextY, float nextZ, float playerRadius) {
-    	
-    	//if the next step not close to this cell, then no collision
-    	if (Math.abs(Math.abs(nextX) - i) > 0.518 || Math.abs(Math.abs(nextZ) - j) > 0.518) {
-    		return false;
-    	}
-    	
-    	//if looking on the floor
-    	if (nextY < -0.45f) {
-    		return true;
-    	}
-    	
-    	//distance from wall1 to the player
+
+        //if the next step not close to this cell, then no collision
+        if (Math.abs(Math.abs(nextX) - i) > 0.518 || Math.abs(Math.abs(nextZ) - j) > 0.518) {
+            return false;
+        }
+
+        //if looking on the floor
+        if (nextY < -0.45f) {
+            return true;
+        }
+
+        //distance from wall1 to the player
     	/*Vector<Float> playerToWall1 = new Vector<Float>(3);
     	playerToWall1.add(nextX - (i + wall1[0][0]));
     	playerToWall1.add(nextY - wall1[0][1]);
     	playerToWall1.add(nextZ - (j + wall1[0][2]));
     	float distanceWall1 = MathUtils.dotProduct(playerToWall1, axisXNormal);*/
-    	float distanceWall1 = nextX - (i + wall1[0][0]);
-    	
-    	//distance from wall2 to the player
+        float distanceWall1 = nextX - (i + wall1[0][0]);
+
+        //distance from wall2 to the player
     	/*Vector<Float> playerToWall2 = new Vector<Float>(3);
     	playerToWall2.add(nextX - (i + wall2[0][0]));
     	playerToWall2.add(nextY - wall2[0][1]);
     	playerToWall2.add(nextZ - (j + wall2[0][2]));
     	float distanceWall2 = MathUtils.dotProduct(playerToWall2, axisXNormal);*/
-    	float distanceWall2 = nextX - (i + wall2[0][0]);
-    	
-    	//distance from wall3 to the player
+        float distanceWall2 = nextX - (i + wall2[0][0]);
+
+        //distance from wall3 to the player
     	/*Vector<Float> playerToWall3 = new Vector<Float>(3);
     	playerToWall3.add(nextX - (i + wall3[0][0]));
     	playerToWall3.add(nextY - wall3[0][1]);
     	playerToWall3.add(nextZ - (j + wall3[0][2]));
     	float distanceWall3 = MathUtils.dotProduct(playerToWall3, axisZNormal);*/
-    	float distanceWall3 = nextZ - (j + wall3[0][2]);
-    	
-    	//distance from wall4 to the player
+        float distanceWall3 = nextZ - (j + wall3[0][2]);
+
+        //distance from wall4 to the player
     	/*Vector<Float> playerToWall4 = new Vector<Float>(3);
     	playerToWall4.add(nextX - (i + wall4[0][0]));
     	playerToWall4.add(nextY - wall4[0][1]);
     	playerToWall4.add(nextZ - (j + wall4[0][2]));
     	float distanceWall4 = MathUtils.dotProduct(playerToWall4, axisZNormal);*/
-    	float distanceWall4 = nextZ - (j + wall4[0][2]);
-    	
-    	//check if there is collision
-    	if (walls[0] && Math.abs(distanceWall1) < playerRadius) {
-    		//System.out.println("hit! wall 1");
-    		return true;
-    	}
-    	if (walls[1] && Math.abs(distanceWall2) < playerRadius) {
-    		//System.out.println("hit! wall 2");
-    		return true;
-    	}
-    	if (walls[2] && Math.abs(distanceWall3) < playerRadius) {
-    		//System.out.println("hit! wall 3");
-    		return true;
-    	}
-    	if (walls[3] && Math.abs(distanceWall4) < playerRadius) {
-    		//System.out.println("hit! wall 4");
-    		return true;
-    	}
-    	
-    	return false;
-    	
+        float distanceWall4 = nextZ - (j + wall4[0][2]);
+
+        //check if there is collision
+        if (walls[0] && Math.abs(distanceWall1) < playerRadius) {
+            //System.out.println("hit! wall 1");
+            return true;
+        }
+        if (walls[1] && Math.abs(distanceWall2) < playerRadius) {
+            //System.out.println("hit! wall 2");
+            return true;
+        }
+        if (walls[2] && Math.abs(distanceWall3) < playerRadius) {
+            //System.out.println("hit! wall 3");
+            return true;
+        }
+        if (walls[3] && Math.abs(distanceWall4) < playerRadius) {
+            //System.out.println("hit! wall 4");
+            return true;
+        }
+
+        return false;
+
     }
-    
+
     /**
      * check if the next step will hit the cell object
+     *
      * @param nextX
      * @param nextY
      * @param nextZ
@@ -308,40 +309,40 @@ public class Cell {
      * @return
      */
     public GameObj.ObjType isHitObj(float nextX, float nextY, float nextZ, float objRadius) {
-    	
-    	//if there is an object in the cell
-    	if (haveObj) {
-    		
-    		//calculate the distance from the object
-    		float xDistance = Math.abs((i - nextX));
-    		float zDistance = Math.abs((j - nextZ));
-    		float yDistance;
-    		if (obj.getObjType() == GameObj.ObjType.END) {
-    			yDistance = Math.abs((-0.2f - nextY));
-    		} else {
-    			yDistance = Math.abs((-0.5f - nextY));
-    		}
-    		
-    		//if it's a dmg obj change the radius
-    		if (obj.getObjType() == GameObj.ObjType.DAMAGE) {
-    			objRadius += 0.1;
-    		}
-    		
-    		//check if hit the obj
-    		if (xDistance < objRadius && zDistance < objRadius && yDistance < 0.35f &&
-    				xDistance + 0.5 > objRadius && zDistance + 0.5 > objRadius) {
-    			
-    			//if hit, return the type of the object
-    			return obj.getObjType();
-    		}
-    	}
-    	
-    	//if we didnt hit an object, return none
-    	return GameObj.ObjType.NONE;
+
+        //if there is an object in the cell
+        if (haveObj) {
+
+            //calculate the distance from the object
+            float xDistance = Math.abs((i - nextX));
+            float zDistance = Math.abs((j - nextZ));
+            float yDistance;
+            if (obj.getObjType() == GameObj.ObjType.END) {
+                yDistance = Math.abs((-0.2f - nextY));
+            } else {
+                yDistance = Math.abs((-0.5f - nextY));
+            }
+
+            //if it's a dmg obj change the radius
+            if (obj.getObjType() == GameObj.ObjType.DAMAGE) {
+                objRadius += 0.1;
+            }
+
+            //check if hit the obj
+            if (xDistance < objRadius && zDistance < objRadius && yDistance < 0.35f &&
+                    xDistance + 0.5 > objRadius && zDistance + 0.5 > objRadius) {
+
+                //if hit, return the type of the object
+                return obj.getObjType();
+            }
+        }
+
+        //if we didnt hit an object, return none
+        return GameObj.ObjType.NONE;
     }
-    
+
     public void deleteCellObj() {
-    	obj.stopDraw();
-    	haveObj = false;
+        obj.stopDraw();
+        haveObj = false;
     }
 }

@@ -131,11 +131,6 @@ public class ViewerFrame extends JFrame implements KeyListener, ActionListener {
         menuAbout.addActionListener(this);
         info.add(menuAbout);
 
-        // add about
-        menuCredits = new JMenuItem("credits");
-        menuCredits.addActionListener(this);
-        info.add(menuCredits);
-
         // add music start
         menuMusicStart = new JMenuItem("start music");
         menuMusicStart.addActionListener(this);
@@ -182,6 +177,24 @@ public class ViewerFrame extends JFrame implements KeyListener, ActionListener {
                 break;
             case KeyEvent.VK_RIGHT:
                 renderer.turnRight(true);
+                break;
+            // close instructions
+            case KeyEvent.VK_I:
+                renderer.showGameDetails();
+                break;
+            // close about
+            case KeyEvent.VK_B:
+                renderer.showAbout();
+                break;
+            // quit
+            case KeyEvent.VK_Q: {
+                JOptionPane.showMessageDialog(null, "See ya!");
+                System.exit(0);
+                break;
+            }
+            // level 2
+            case KeyEvent.VK_L:
+                renderer.moveToLevelTwo();
                 break;
             // jump
             case KeyEvent.VK_SPACE:
@@ -245,12 +258,8 @@ public class ViewerFrame extends JFrame implements KeyListener, ActionListener {
             } else if (e.getSource().equals(menuInstructions)) {
                 renderer.showGameDetails();
 
-                // about TODO show about image
+                // about
             } else if (e.getSource().equals(menuAbout)) {
-                renderer.showGameDetails();
-
-                // credits for oren, the music etc TODO
-            } else if (e.getSource().equals(menuCredits)) {
                 renderer.showGameDetails();
 
                 // music start

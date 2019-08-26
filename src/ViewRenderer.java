@@ -45,30 +45,32 @@ public class ViewRenderer implements GLEventListener {
     //the jump high limit
     float jumpLimit = 0.1f;
 
-    //end game key
+    // end game key
     private int reachEndKey = 0;
-    //player keys
+    // player keys
     private ImageDrawer key1;
     private ImageDrawer key2;
-    //player health
+    // player health
     private LifeStatus healthBar;
-    //hp image
+    // hp image
     private ImageDrawer hpImg;
-    //game details image
+    // game details image
     private ImageDrawer details;
-    //game over screen
+    // game about image
+    private ImageDrawer about;
+    // game over screen
     private ImageDrawer gameOver;
-    //win screen
+    // win screen
     private ImageDrawer win;
-    //level two title
+    // level two title
     private ImageDrawer levelTwoTitle;
-    //TDDrawable list for draw in 2D
+    // TDDrawable list for draw in 2D
     private ArrayList<TDDrawable> objDraw2D;
-    //the level we want to draw
+    // the level we want to draw
     private int levelDraw = 1;
-    //play level
+    // play level
     private int currentLevel = 1;
-    //finish game flag
+    // finish game flag
     private boolean finishGame = false;
 
     //The wall/ceiling/etc drawlist
@@ -87,9 +89,9 @@ public class ViewRenderer implements GLEventListener {
      * @param fps - the number of fps at which animation should occur.
      */
     public ViewRenderer(int fps) {
-        // Delay between time updates in ms
+        // delay between time updates in ms
         delay = 1000 / fps;
-        // Look at the time now
+        // look at the time now
         lastTime = System.currentTimeMillis();
     }
 
@@ -103,8 +105,7 @@ public class ViewRenderer implements GLEventListener {
 
     @Override
     public void display(GLAutoDrawable drawable) {
-
-        // Get the OpenGL Context
+        // get the OpenGL context
         GL2 gl = drawable.getGL().getGL2();
 
         switch (levelDraw) {
@@ -165,11 +166,9 @@ public class ViewRenderer implements GLEventListener {
                 case END:
                     //if player came to end point in maze and take the level key.
                     if (reachEndKey == 2) {
-
-                        //if we in stage 1 , we are finished and move to stage 2
+                        // if we in stage 1 , we are finished and move to stage 2
                         if (currentLevel == 1) {
-                            currentLevel = 2;
-                            setLevelTwo();
+                            moveToLevelTwo();
                             return;
                         } else {
                             //finish the game
@@ -216,32 +215,32 @@ public class ViewRenderer implements GLEventListener {
             }
         }
 
-        //if there is no collision, do the step
+        // if there is no collision, do the step
         if (!collisionFlag && !finishGame) {
             playerPos.setPos(newPos);
         }
 
-        //update the look-at position based on the current cam position
+        // update the look-at position based on the current cam position
         playerPos.setLookAtPoint();
 
-        //Clear the colour and depth buffers
+        // Clear the colour and depth buffers
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
-        //Load the identity matrix and set up the camera based on its coords
+        // Load the identity matrix and set up the camera based on its coords
         gl.glLoadIdentity();
         glu.gluLookAt(playerPos.position[0], playerPos.position[1], playerPos.position[2],
                 playerPos.lookAt[0], playerPos.lookAt[1], playerPos.lookAt[2],
                 playerPos.y[0], playerPos.y[1], playerPos.y[2]);
 
-        //Iterate through the draw methods of each cell in the arraylist
+        // Iterate through the draw methods of each cell in the arraylist
         for (Cell cell : mazeCells) {
             cell.draw(textures, gl);
         }
 
-        //draw all the 2D objects
+        // draw all the 2D objects
         drawHUD(gl, objDraw2D);
 
-        // Flush the data.
+        // Flush the data
         gl.glFlush();
 
     }
@@ -251,23 +250,22 @@ public class ViewRenderer implements GLEventListener {
      */
     @Override
     public void init(GLAutoDrawable drawable) {
-
         drawable.setGL(new DebugGL2(drawable.getGL().getGL2()));
         GL2 gl = drawable.getGL().getGL2();
         gl.glShadeModel(GL2.GL_SMOOTH);
 
-        //player axis get the player speed and the camera speed
+        // player axis get the player speed and the camera speed
         playerPos = new PlayerAxis(0.02f, 2f);
 
-        //Set up the default buffer clear parameters
+        // Set up the default buffer clear parameters
         gl.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
         gl.glClearDepth(1.0f);
 
-        //Enable the depth testing
+        // Enable the depth testing
         gl.glEnable(GL2.GL_DEPTH_TEST);
         gl.glDepthFunc(GL2.GL_LEQUAL);
 
-        //Enable lighting
+        // Enable lighting
         gl.glEnable(GL2.GL_LIGHTING);
         gl.glEnable(GL2.GL_LIGHT0);
         gl.glEnable(GL2.GL_LIGHT1);
@@ -275,7 +273,7 @@ public class ViewRenderer implements GLEventListener {
         // set up the minimum ambient lighting level of the whole scene
         gl.glLightModelfv(GL2.GL_LIGHT_MODEL_AMBIENT, new float[]{0.0f, 0.0f, 0.0f}, 0);
 
-        //Set up the light's material properties
+        // Set up the light's material properties
         gl.glMaterialfv(GL.GL_FRONT, GL2.GL_AMBIENT, new float[]{0.8f, 0.8f, 0.8f, 1.0f}, 0);
         gl.glMaterialfv(GL.GL_FRONT, GL2.GL_DIFFUSE, new float[]{0.8f, 0.8f, 0.8f, 1.0f}, 0);
         gl.glMaterialfv(GL.GL_FRONT, GL2.GL_EMISSION, new float[]{0.0f, 0.0f, 0.0f, 1.0f}, 0);
@@ -286,7 +284,7 @@ public class ViewRenderer implements GLEventListener {
         // using texture color as a base for material properties
         gl.glEnable(GL2.GL_COLOR_MATERIAL);
 
-        //Set up a light source for light 0 and 1
+        // Set up a light source for light 0 and 1
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_AMBIENT, new float[]{0.0f, 0.0f, 0.0f, 1.0f}, 0);
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_DIFFUSE, new float[]{1.0f, 1.0f, 1.0f, 1.0f}, 0);
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPECULAR, new float[]{0.4f, 0.4f, 0.4f, 1.0f}, 0);
@@ -295,14 +293,14 @@ public class ViewRenderer implements GLEventListener {
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_DIFFUSE, new float[]{1.0f, 1.0f, 1.0f, 1.0f}, 0);
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_SPECULAR, new float[]{0.4f, 0.4f, 0.4f, 1.0f}, 0);
 
-        //Set the attenuation parameter of the lights
+        // Set the attenuation parameter of the lights
         gl.glLightf(GL2.GL_LIGHT0, GL2.GL_LINEAR_ATTENUATION, 0.5f);
         gl.glLightf(GL2.GL_LIGHT0, GL2.GL_QUADRATIC_ATTENUATION, 0.5f);
 
         gl.glLightf(GL2.GL_LIGHT1, GL2.GL_LINEAR_ATTENUATION, 0.5f);
         gl.glLightf(GL2.GL_LIGHT1, GL2.GL_QUADRATIC_ATTENUATION, 0.5f);
 
-        //Enable backface culling to save up more system resources
+        // Enable backface culling to save up more system resources
         gl.glCullFace(GL2.GL_BACK);
         gl.glEnable(GL2.GL_CULL_FACE);
 
@@ -322,28 +320,31 @@ public class ViewRenderer implements GLEventListener {
             e.printStackTrace();
         }
 
-        //create health bar
+        // create health bar
         healthBar = new LifeStatus();
         hpImg = new ImageDrawer("textures/hp.png", new float[][]{{-0.48f, 0.2f}, {-0.48f, -0.4f}, {-0.1f, -0.4f}, {-0.1f, 0.2f}});
         hpImg.loadImage();
-        //create player key image when find one
+        // create player key image when find one
         key1 = new ImageDrawer("textures/key.jpg", new float[][]{{9.2f, -8.8f}, {9.2f, -9.5f}, {9.7f, -9.5f}, {9.7f, -8.8f}});
         key1.loadImage();
         key2 = new ImageDrawer("textures/key.jpg", new float[][]{{8.6f, -8.8f}, {8.6f, -9.5f}, {9.1f, -9.5f}, {9.1f, -8.8f}});
         key2.loadImage();
-        //create game details image
-        details = new ImageDrawer("textures/details.png", new float[][]{{1.5f, -0.8f}, {1.5f, -8.7f}, {8.0f, -8.7f}, {8.0f, -0.8f}});
+        // create game details image
+        details = new ImageDrawer("textures/instructions.png", new float[][]{{1.5f, -0.8f}, {1.5f, -8.7f}, {8.0f, -8.7f}, {8.0f, -0.8f}});
         details.loadImage();
-        //create level two title
-        levelTwoTitle = new ImageDrawer("textures/levelTwo.png", new float[][]{{1.0f, -2.3f}, {1.0f, -7.2f}, {8.5f, -7.2f}, {8.5f, -2.3f}});
+        // create about image
+        about = new ImageDrawer("textures/about.png", new float[][]{{1.5f, -0.8f}, {1.5f, -8.7f}, {8.0f, -8.7f}, {8.0f, -0.8f}});
+        about.loadImage();
+        // create level two title
+        levelTwoTitle = new ImageDrawer("textures/levelTwo.jpg", new float[][]{{1.0f, -2.3f}, {1.0f, -7.2f}, {8.5f, -7.2f}, {8.5f, -2.3f}});
         levelTwoTitle.loadImage();
-        //game over / win screen
-        gameOver = new ImageDrawer("textures/gameover.png", new float[][]{{1.0f, -3.0f}, {1.0f, -6.0f}, {8.5f, -6.0f}, {8.5f, -3.0f}});
+        // game over / win screen
+        gameOver = new ImageDrawer("textures/gameover.jpg", new float[][]{{1.0f, -3.0f}, {1.0f, -6.0f}, {8.5f, -6.0f}, {8.5f, -3.0f}});
         gameOver.loadImage();
-        win = new ImageDrawer("textures/win.png", new float[][]{{1.0f, -3.0f}, {1.0f, -6.0f}, {8.5f, -6.0f}, {8.5f, -3.0f}});
+        win = new ImageDrawer("textures/win.jpg", new float[][]{{1.0f, -3.0f}, {1.0f, -6.0f}, {8.5f, -6.0f}, {8.5f, -3.0f}});
         win.loadImage();
 
-        //set the texture wrap
+        // set the texture wrap
         textures[0].setTexParameteri(gl, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
         textures[0].setTexParameteri(gl, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
         textures[1].setTexParameteri(gl, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
@@ -360,7 +361,7 @@ public class ViewRenderer implements GLEventListener {
         gl.glTranslatef(0.0f, -0.475f, -0.475f);
         //gl.glNormal3f(0,0,-1);
 
-        //create generic wall vertices on the y-z axis
+        // create generic wall vertices on the y-z axis
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 20; j++) {
                 gl.glBegin(GL2.GL_POLYGON);
@@ -441,8 +442,8 @@ public class ViewRenderer implements GLEventListener {
     /**
      * Set the initial camera position
      *
-     * @param initXPos the X position of the player
-     * @param initZPos the Z position of the player
+     * @param inXPos the X position of the player
+     * @param inZPos the Z position of the player
      */
     public static void setPos(float inXPos, float inZPos) {
         initXPos = inXPos;
@@ -574,11 +575,10 @@ public class ViewRenderer implements GLEventListener {
      * draw object in 2d
      *
      * @param gl
-     * @param obj
+     * @param objDraw2D2
      */
     public void drawHUD(GL2 gl, ArrayList<TDDrawable> objDraw2D2) {
-
-        //set to ortho matrix to draw in 2d
+        // set to ortho matrix to draw in 2d
         gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
         gl.glPushMatrix();
         gl.glLoadIdentity();
@@ -587,12 +587,12 @@ public class ViewRenderer implements GLEventListener {
         gl.glPushMatrix();
         gl.glLoadIdentity();
 
-        //draw the objects that we want to draw in 2d
+        // draw the objects that we want to draw in 2d
         for (TDDrawable obj : objDraw2D2) {
             obj.draw2D(gl);
         }
 
-        //return the PROJECTION matrix and then to vm
+        // return the PROJECTION matrix and then to vm
         gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);
         gl.glPopMatrix();
         gl.glMatrixMode(GLMatrixFunc.GL_MODELVIEW);
@@ -617,10 +617,13 @@ public class ViewRenderer implements GLEventListener {
         if (objDraw2D.contains(details)) {
             objDraw2D.remove(details);
         }
+        if (objDraw2D.contains(about)) {
+            objDraw2D.remove(about);
+        }
 
         objDraw2D.add(levelTwoTitle);
 
-        //delete title after 1500 milisec
+        // delete title after 1500 milisec
         new java.util.Timer().schedule(
                 new java.util.TimerTask() {
                     @Override
@@ -647,6 +650,10 @@ public class ViewRenderer implements GLEventListener {
         if (objDraw2D.contains(details)) {
             objDraw2D.remove(details);
         }
+        if (objDraw2D.contains(about)) {
+            objDraw2D.remove(about);
+        }
+
         //if the player in stage 1 , he player the game again and he gain full lives
         healthBar.initHealthPoints();
         finishGame = false;
@@ -656,7 +663,7 @@ public class ViewRenderer implements GLEventListener {
         finishGame = true;
         objDraw2D.add(gameOver);
 
-        //delete title after 1000 milisec and start new game
+        // delete title after 1000 milisec and start new game
         new java.util.Timer().schedule(
                 new java.util.TimerTask() {
                     @Override
@@ -675,8 +682,42 @@ public class ViewRenderer implements GLEventListener {
     public void showGameDetails() {
         if (!objDraw2D.contains(details)) {
             objDraw2D.add(details);
+            // delete title after 5000 milisec
+            new java.util.Timer().schedule(
+                    new java.util.TimerTask() {
+                        @Override
+                        public void run() {
+                            objDraw2D.remove(details);
+                        }
+                    },
+                    5000
+            );
         } else {
             objDraw2D.remove(details);
         }
     }
+
+    public void showAbout() {
+        if (!objDraw2D.contains(about)) {
+            objDraw2D.add(about);
+            // delete title after 5000 milisec
+            new java.util.Timer().schedule(
+                    new java.util.TimerTask() {
+                        @Override
+                        public void run() {
+                            objDraw2D.remove(about);
+                        }
+                    },
+                    5000
+            );
+        } else {
+            objDraw2D.remove(about);
+        }
+    }
+
+    public void moveToLevelTwo() {
+        currentLevel = 2;
+        setLevelTwo();
+    }
+
 }
