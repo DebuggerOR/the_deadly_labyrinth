@@ -13,8 +13,8 @@ import javax.media.opengl.GL2;
 // object in our game
 public class GameObj extends MazeObject {
     private float yrot = 30;
-    private boolean move = false;
     private float xtran = 0.0f;
+    private boolean move = false;
 
     public enum ObjType {START, HEAL, DAMAGE, ENDKEY, END, NONE}
 
