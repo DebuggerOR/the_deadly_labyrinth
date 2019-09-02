@@ -2,7 +2,7 @@ package Collision;
 
 import java.util.Vector;
 
-import math_utils.MathUtils;
+import Utils.Math;
 
 public class OBB extends Shape {
 	private Vector<Float> x;
@@ -74,12 +74,12 @@ public class OBB extends Shape {
 		second_coordinate.set(2, max_point_y.get(2) - z_center);
 		
 		// find the third coordinate with cross product
-		Vector<Float> third_coordinate = MathUtils.crossProduct(first_coordinate, second_coordinate);
+		Vector<Float> third_coordinate = Math.crossProduct(first_coordinate, second_coordinate);
 		
 		// normalization the vectors
-		first_coordinate = MathUtils.normalization(first_coordinate);
-		second_coordinate = MathUtils.normalization(second_coordinate);
-		third_coordinate = MathUtils.normalization(third_coordinate);
+		first_coordinate = Math.normalization(first_coordinate);
+		second_coordinate = Math.normalization(second_coordinate);
+		third_coordinate = Math.normalization(third_coordinate);
 
 		// set the box's coordinates
 		x = third_coordinate;

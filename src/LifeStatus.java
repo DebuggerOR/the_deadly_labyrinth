@@ -5,10 +5,7 @@ import javax.media.opengl.GL2GL3;
 
 public class LifeStatus implements TDDrawable {
 	private int points = 20;
-	
-	public LifeStatus() {}
-	
-	
+
 	/**
 	 * this draw is in 2D!
 	 * max hp 100 = 20 pieces.
@@ -90,4 +87,6 @@ public class LifeStatus implements TDDrawable {
 	public int getHealthPoints() {
 		return points;
 	}
+
+	public LifeStatus() {}
 }

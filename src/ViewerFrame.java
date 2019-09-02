@@ -22,14 +22,13 @@ public class ViewerFrame extends JFrame implements KeyListener, ActionListener {
 
     // jpanel, renderer and animator
     private GLJPanel panel;
-    private ViewRenderer renderer;
+    private Renderer renderer;
     private FPSAnimator animator;
 
     // menu items
     private JMenuItem menuQuit;
     private JMenuItem menuReset;
     private JMenuItem menuAbout;
-    private JMenuItem menuCredits;
     private JMenuItem menuRestart;
     private JMenuItem menuMusicStop;
     private JMenuItem menuMusicStart;
@@ -71,7 +70,7 @@ public class ViewerFrame extends JFrame implements KeyListener, ActionListener {
         panel.setDoubleBuffered(true);
         panel.setIgnoreRepaint(true);
 
-        renderer = new ViewRenderer(60);
+        renderer = new Renderer(60);
         panel.addGLEventListener(renderer);
         animator = new FPSAnimator(panel, 60);
         getContentPane().add(panel);
@@ -92,6 +91,64 @@ public class ViewerFrame extends JFrame implements KeyListener, ActionListener {
             clip.loop(Clip.LOOP_CONTINUOUSLY);
         } catch (Exception e) {
         }
+    }
+
+    /**
+     * action performed
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        try {
+            // exit
+            if (e.getSource().equals(menuQuit)) {
+                JOptionPane.showMessageDialog(null, "See ya!");
+                System.exit(0);
+
+                // reset location
+            } else if (e.getSource().equals(menuReset)) {
+                renderer.reset();
+
+                // restart game
+            } else if (e.getSource().equals(menuRestart)) {
+                renderer.restartGame();
+
+                // instructions
+            } else if (e.getSource().equals(menuInstructions)) {
+                renderer.showGameDetails();
+
+                // about
+            } else if (e.getSource().equals(menuAbout)) {
+                renderer.showAbout();
+
+                // music start
+            } else if (e.getSource().equals(menuMusicStart)) {
+                initMusic();
+
+                // music stop
+            } else if (e.getSource().equals(menuMusicStop)) {
+                if (clip != null) {
+                    clip.stop();
+                }
+
+                // music choose
+            } else if (e.getSource().equals(menuMusicChoose)) {
+                if (clip != null) {
+                    clip.stop();
+                }
+                FileDialog fd = new FileDialog(this, "choose wav file");
+                fd.setVisible(true);
+                String f = fd.getFile();
+                if (f.endsWith(".wav")) {
+                    musicPath = f;
+                    initMusic();
+                }
+            }
+        } catch (Exception ex) {
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
     }
 
     /**
@@ -159,6 +216,7 @@ public class ViewerFrame extends JFrame implements KeyListener, ActionListener {
     @Override
     public void keyPressed(KeyEvent key) {
         switch (key.getKeyCode()) {
+            // move the player position on the z and x axis
             case KeyEvent.VK_W:
                 renderer.moveForward(true);
                 break;
@@ -171,31 +229,47 @@ public class ViewerFrame extends JFrame implements KeyListener, ActionListener {
             case KeyEvent.VK_D:
                 renderer.moveRight(true);
                 break;
-            // move camera
+
+            // move the camera
+            case KeyEvent.VK_UP:
+                renderer.turnUp(true);
+                break;
+            case KeyEvent.VK_DOWN:
+                renderer.turnDown(true);
+                break;
             case KeyEvent.VK_LEFT:
                 renderer.turnLeft(true);
                 break;
             case KeyEvent.VK_RIGHT:
                 renderer.turnRight(true);
                 break;
-            // close instructions
-            case KeyEvent.VK_I:
+
+            // z axis
+            case KeyEvent.VK_Q:
+                renderer.turnZUp(true);
+                break;
+            case KeyEvent.VK_E:
+                renderer.turnZDown(true);
+                break;
+
+            // instructions
+            case KeyEvent.VK_F1:
                 renderer.showGameDetails();
                 break;
-            // close about
-            case KeyEvent.VK_B:
+            // level 2
+            case KeyEvent.VK_F2:
+                renderer.moveToLevelTwo();
+                break;
+            // about
+            case KeyEvent.VK_F3:
                 renderer.showAbout();
                 break;
             // quit
-            case KeyEvent.VK_Q: {
+            case KeyEvent.VK_ESCAPE: {
                 JOptionPane.showMessageDialog(null, "See ya!");
                 System.exit(0);
                 break;
             }
-            // level 2
-            case KeyEvent.VK_L:
-                renderer.moveToLevelTwo();
-                break;
             // jump
             case KeyEvent.VK_SPACE:
                 renderer.jump();
@@ -211,6 +285,7 @@ public class ViewerFrame extends JFrame implements KeyListener, ActionListener {
     @Override
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
+            // move the player position on the z and x axis
             case KeyEvent.VK_W:
                 renderer.moveForward(false);
                 break;
@@ -223,73 +298,29 @@ public class ViewerFrame extends JFrame implements KeyListener, ActionListener {
             case KeyEvent.VK_D:
                 renderer.moveRight(false);
                 break;
-            // move camera
+
+            // move the camera
+            case KeyEvent.VK_UP:
+                renderer.turnUp(false);
+                break;
+            case KeyEvent.VK_DOWN:
+                renderer.turnDown(false);
+                break;
             case KeyEvent.VK_LEFT:
                 renderer.turnLeft(false);
                 break;
             case KeyEvent.VK_RIGHT:
                 renderer.turnRight(false);
                 break;
+            // turn z axis
+            case KeyEvent.VK_Q:
+                renderer.turnZUp(false);
+                break;
+            case KeyEvent.VK_E:
+                renderer.turnZDown(false);
+                break;
             default:
                 break;
         }
-    }
-
-    /**
-     * action performed
-     */
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        try {
-            // exit
-            if (e.getSource().equals(menuQuit)) {
-                JOptionPane.showMessageDialog(null, "See ya!");
-                System.exit(0);
-
-                // reset location
-            } else if (e.getSource().equals(menuReset)) {
-                renderer.reset();
-
-                // restart game
-            } else if (e.getSource().equals(menuRestart)) {
-                renderer.restartGame();
-
-                // instructions
-            } else if (e.getSource().equals(menuInstructions)) {
-                renderer.showGameDetails();
-
-                // about
-            } else if (e.getSource().equals(menuAbout)) {
-                renderer.showGameDetails();
-
-                // music start
-            } else if (e.getSource().equals(menuMusicStart)) {
-                initMusic();
-
-                // music stop
-            } else if (e.getSource().equals(menuMusicStop)) {
-                if (clip != null) {
-                    clip.stop();
-                }
-
-                // music choose
-            } else if (e.getSource().equals(menuMusicChoose)) {
-                if (clip != null) {
-                    clip.stop();
-                }
-                FileDialog fd = new FileDialog(this, "choose wav file");
-                fd.setVisible(true);
-                String f = fd.getFile();
-                if (f.endsWith(".wav")) {
-                    musicPath = f;
-                    initMusic();
-                }
-            }
-        } catch (Exception ex) {
-        }
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
     }
 }

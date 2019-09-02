@@ -1,5 +1,5 @@
 
-import math_utils.MathUtils;
+import Utils.Math;
 
 public class PlayerAxis {
     //player coordinate
@@ -64,28 +64,28 @@ public class PlayerAxis {
 
         switch (axis) {
             case "x":
-                new_z = MathUtils.addVectors(
-                        MathUtils.multVecScalar(z, MathUtils.COS(alfa)),
-                        MathUtils.multVecScalar(y, MathUtils.SIN(alfa)));
-                new_y = MathUtils.subVectors(
-                        MathUtils.multVecScalar(y, MathUtils.COS(alfa)),
-                        MathUtils.multVecScalar(z, MathUtils.SIN(alfa)));
+                new_z = Math.addVectors(
+                        Math.multVecScalar(z, Math.COS(alfa)),
+                        Math.multVecScalar(y, Math.SIN(alfa)));
+                new_y = Math.subVectors(
+                        Math.multVecScalar(y, Math.COS(alfa)),
+                        Math.multVecScalar(z, Math.SIN(alfa)));
                 break;
             case "y":
-                new_x = MathUtils.addVectors(
-                        MathUtils.multVecScalar(x, MathUtils.COS(alfa)),
-                        MathUtils.multVecScalar(z, MathUtils.SIN(alfa)));
-                new_z = MathUtils.subVectors(
-                        MathUtils.multVecScalar(z, MathUtils.COS(alfa)),
-                        MathUtils.multVecScalar(x, MathUtils.SIN(alfa)));
+                new_x = Math.addVectors(
+                        Math.multVecScalar(x, Math.COS(alfa)),
+                        Math.multVecScalar(z, Math.SIN(alfa)));
+                new_z = Math.subVectors(
+                        Math.multVecScalar(z, Math.COS(alfa)),
+                        Math.multVecScalar(x, Math.SIN(alfa)));
                 break;
             case "z":
-                new_x = MathUtils.addVectors(
-                        MathUtils.multVecScalar(x, MathUtils.COS(alfa)),
-                        MathUtils.multVecScalar(y, MathUtils.SIN(alfa)));
-                new_y = MathUtils.subVectors(
-                        MathUtils.multVecScalar(y, MathUtils.COS(alfa)),
-                        MathUtils.multVecScalar(x, MathUtils.SIN(alfa)));
+                new_x = Math.addVectors(
+                        Math.multVecScalar(x, Math.COS(alfa)),
+                        Math.multVecScalar(y, Math.SIN(alfa)));
+                new_y = Math.subVectors(
+                        Math.multVecScalar(y, Math.COS(alfa)),
+                        Math.multVecScalar(x, Math.SIN(alfa)));
         }
 
         x = new_x;
@@ -179,16 +179,16 @@ public class PlayerAxis {
      * @return
      */
     public float[] transVector(float[] v) {
-        return MathUtils.multiplyMatrixInVector(coordiTrans, v);
+        return Math.multiplyMatrixInVector(coordiTrans, v);
     }
 
     /**
      * normalize the player coordinate
      */
     public void normalization() {
-        float x_len = MathUtils.vectorLen(x);
-        float y_len = MathUtils.vectorLen(y);
-        float z_len = MathUtils.vectorLen(z);
+        float x_len = Math.vectorLen(x);
+        float y_len = Math.vectorLen(y);
+        float z_len = Math.vectorLen(z);
 
         for (int i = 0; i < 3; i++) {
             x[i] = x[i] / x_len;
