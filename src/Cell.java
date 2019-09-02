@@ -38,18 +38,18 @@ public class Cell {
             {0.5f, 0.5f, -0.5f}};
 
 
-    //The list of booleans that determine the existence of the walls
+    // the list of booleans that determine the existence of the walls
     boolean[] walls;
-    //The X and Y index of the maze cell
+    // the X and Y index of the maze cell
     private float i;
     private float j;
-    //The maze object containing the start/end properties of the maze
+    // the maze object containing the start/end properties of the maze
     private GameObj obj;
     private boolean haveObj = false;
-    //The drawlist variable
+    // the draw list variable
     private int rectList = -1;
 
-    ///normal for collision
+    // normal for collision
     Vector<Float> axisXNormal = new Vector<Float>(3);
     Vector<Float> axisZNormal = new Vector<Float>(3);
 
@@ -60,17 +60,17 @@ public class Cell {
         // +x, -x, +z, -z . So, if your cell is 1x1x1,
         // and the middle of your cell is at
         // (0.5, 0.5, 0.5) the +x wall is the wall
-        // whose centre is at (1.0, 0.5, 0.5) and the 
+        // whose centre is at (1.0, 0.5, 0.5) and the
         // -x wall is the wall whose centre is at
         // (0.0, 0.5, 0.5)
         // The i and j values are the cell index in the maze
         this.walls = walls;
         this.i = i;
         this.j = j;
-        // Take the rectangle render list for drawing walls etc
+        // take the rectangle render list for drawing walls etc
         this.rectList = ViewRenderer.rectList;
 
-        //set the normals for the collision
+        // set the normals for the collision
         axisXNormal.add(1f);
         axisXNormal.add(0f);
         axisXNormal.add(0f);
@@ -86,40 +86,40 @@ public class Cell {
      * @param obj
      */
     public void addItem(GameObj obj) {
-        //Add the maze object to the list of variables
+        // add the maze object to the list of variables
         this.obj = obj;
         haveObj = true;
 
-        //If it's the start cell, set the initial player position
+        // if it's the start cell, set the initial player position
         if (this.obj.isStart()) ViewRenderer.setPos(i, j - 0.5f);
     }
 
     public void draw(Texture[] textures, GL2 gl) {
         gl.glPushMatrix();
 
-        //Move the current cell of the maze according to its relative position
+        // move the current cell of the maze according to its relative position
         gl.glTranslatef(i, 0.0f, j);
 
-        //Set up the lighting point position
+        // set up the lighting point position
         gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_POSITION, new float[]{-0.25f, 0.4f, 0.0f, 1.0f}, 0);
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, new float[]{0.25f, 0.4f, 0.0f, 1.0f}, 0);
-        //gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPOT_DIRECTION, new float [] { 0.0f, -0.5f, 1.0f, 0.0f}, 0);
+        // gl.glLightfv(GL2.GL_LIGHT0, GL2.GL_SPOT_DIRECTION, new float [] { 0.0f, -0.5f, 1.0f, 0.0f}, 0);
 
-        //Enable and bind the textures to be used for mapping onto the faces
+        // enable and bind the textures to be used for mapping onto the faces
         gl.glActiveTexture(GL2.GL_TEXTURE0);
         textures[0].enable(gl);
         textures[0].bind(gl);
 
         gl.glColor3f(1.0f, 1.0f, 1.0f);
 
-        //If a wall of the current maze cell exists, draw it. Repeat for all 4 walls.
-        //right wall
+        // if a wall of the current maze cell exists, draw it. Repeat for all 4 walls.
+        // right wall
         if (walls[0]) {
             gl.glNormal3f(1.0f, 0.0f, 0.0f);
             gl.glCallList(rectList);
 
         }
-        //left wall
+        // left wall
         if (walls[1]) {
             gl.glPushMatrix();
             gl.glRotatef(180, 0.0f, 1.0f, 0.0f);
@@ -127,7 +127,7 @@ public class Cell {
             gl.glCallList(rectList);
             gl.glPopMatrix();
         }
-        //back wall
+        // back wall
         if (walls[2]) {
             gl.glPushMatrix();
             gl.glRotatef(270, 0.0f, 1.0f, 0.0f);
@@ -135,7 +135,7 @@ public class Cell {
             gl.glCallList(rectList);
             gl.glPopMatrix();
         }
-        //front wall
+        // front wall
         if (walls[3]) {
             gl.glPushMatrix();
             gl.glRotatef(90, 0.0f, 1.0f, 0.0f);
@@ -144,14 +144,14 @@ public class Cell {
             gl.glPopMatrix();
         }
 
-        //Change the textures to be used for next mapping
+        // change the textures to be used for next mapping
         textures[0].disable(gl);
         textures[1].enable(gl);
         textures[1].bind(gl);
 
-        //The floor
+        // the floor
         gl.glBegin(GL2.GL_POLYGON);
-        //setNormal(floor[0], floor[1], floor[2], gl);
+        // setNormal(floor[0], floor[1], floor[2], gl);
         gl.glMultiTexCoord2f(GL2.GL_TEXTURE0, 0, 0);
         gl.glVertex3fv(floor[0], 0);
         gl.glMultiTexCoord2f(GL2.GL_TEXTURE0, 0, 1);
@@ -162,12 +162,12 @@ public class Cell {
         gl.glVertex3fv(floor[3], 0);
         gl.glEnd();
 
-        //Change the textures to be used for next mapping
+        // change the textures to be used for next mapping
         textures[1].disable(gl);
         textures[2].enable(gl);
         textures[2].bind(gl);
 
-        //The ceiling
+        // the ceiling
         gl.glPushMatrix();
         gl.glRotatef(90, 0.0f, 0.0f, -1.0f);
         gl.glNormal3f(1.0f, 0.0f, 0.0f);
@@ -176,7 +176,7 @@ public class Cell {
 
         textures[2].disable(gl);
 
-        //If the maze's end-point object exists, invoke its draw method
+        // if the maze's end-point object exists, invoke its draw method
         if (haveObj) obj.draw(gl);
 
         gl.glPopMatrix();
@@ -192,13 +192,13 @@ public class Cell {
      * @param gl The openGL context
      */
     public void setNormal(float[] a, float[] b, float[] c, GL2 gl) {
-        //Create the vectors to apply the cross product on
+        // create the vectors to apply the cross product on
         float v1[] = new float[3];
         float v2[] = new float[3];
         float vC[] = new float[3];
         float vN[] = new float[3];
 
-        //Calculate the vectors by substracting one set of coordinates from another
+        // calculate the vectors by substracting one set of coordinates from another
         v1[0] = b[0] - a[0];
         v1[1] = b[1] - a[1];
         v1[2] = b[2] - a[2];
@@ -207,17 +207,17 @@ public class Cell {
         v2[1] = c[1] - a[1];
         v2[2] = c[2] - a[2];
 
-        //Calculate the cross product between the 2 vectors
+        // calculate the cross product between the 2 vectors
         vC[0] = (v1[1] * v2[2]) - (v1[2] * v2[1]);
         vC[1] = (v1[2] * v2[0]) - (v1[0] * v2[2]);
         vC[2] = (v1[0] * v2[1]) - (v1[1] * v2[0]);
 
-        //Turn the resulting vector into a unit-vector
+        // turn the resulting vector into a unit-vector
         float magnitude = (float) Math.sqrt((vC[0] * vC[0]) + (vC[1] * vC[1]) + (vC[2] * vC[2]));
         vN[0] = vC[0] / magnitude;
         vN[1] = vC[1] / magnitude;
         vN[2] = vC[2] / magnitude;
-        //Send the normalization command with the vector to the GL context
+        // send the normalization command with the vector to the GL context
         gl.glNormal3fv(vN, 0);
     }
 
@@ -235,17 +235,17 @@ public class Cell {
      */
     public boolean isHit(float nextX, float nextY, float nextZ, float playerRadius) {
 
-        //if the next step not close to this cell, then no collision
+        // if the next step not close to this cell, then no collision
         if (Math.abs(Math.abs(nextX) - i) > 0.518 || Math.abs(Math.abs(nextZ) - j) > 0.518) {
             return false;
         }
 
-        //if looking on the floor
+        // if looking on the floor
         if (nextY < -0.45f) {
             return true;
         }
 
-        //distance from wall1 to the player
+        // distance from wall1 to the player
     	/*Vector<Float> playerToWall1 = new Vector<Float>(3);
     	playerToWall1.add(nextX - (i + wall1[0][0]));
     	playerToWall1.add(nextY - wall1[0][1]);
@@ -277,21 +277,21 @@ public class Cell {
     	float distanceWall4 = MathUtils.dotProduct(playerToWall4, axisZNormal);*/
         float distanceWall4 = nextZ - (j + wall4[0][2]);
 
-        //check if there is collision
+        // check if there is collision
         if (walls[0] && Math.abs(distanceWall1) < playerRadius) {
-            //System.out.println("hit! wall 1");
+            // System.out.println("hit! wall 1");
             return true;
         }
         if (walls[1] && Math.abs(distanceWall2) < playerRadius) {
-            //System.out.println("hit! wall 2");
+            // System.out.println("hit! wall 2");
             return true;
         }
         if (walls[2] && Math.abs(distanceWall3) < playerRadius) {
-            //System.out.println("hit! wall 3");
+            // System.out.println("hit! wall 3");
             return true;
         }
         if (walls[3] && Math.abs(distanceWall4) < playerRadius) {
-            //System.out.println("hit! wall 4");
+            // System.out.println("hit! wall 4");
             return true;
         }
 
@@ -309,11 +309,10 @@ public class Cell {
      * @return
      */
     public GameObj.ObjType isHitObj(float nextX, float nextY, float nextZ, float objRadius) {
-
-        //if there is an object in the cell
+        // if there is an object in the cell
         if (haveObj) {
 
-            //calculate the distance from the object
+            // calculate the distance from the object
             float xDistance = Math.abs((i - nextX));
             float zDistance = Math.abs((j - nextZ));
             float yDistance;
@@ -323,21 +322,21 @@ public class Cell {
                 yDistance = Math.abs((-0.5f - nextY));
             }
 
-            //if it's a dmg obj change the radius
+            // if it's a dmg obj change the radius
             if (obj.getObjType() == GameObj.ObjType.DAMAGE) {
                 objRadius += 0.1;
             }
 
-            //check if hit the obj
+            // check if hit the obj
             if (xDistance < objRadius && zDistance < objRadius && yDistance < 0.35f &&
                     xDistance + 0.5 > objRadius && zDistance + 0.5 > objRadius) {
 
-                //if hit, return the type of the object
+                // if hit, return the type of the object
                 return obj.getObjType();
             }
         }
 
-        //if we didnt hit an object, return none
+        // if we didnt hit an object, return none
         return GameObj.ObjType.NONE;
     }
 

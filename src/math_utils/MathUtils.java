@@ -4,16 +4,27 @@ package math_utils;
 import java.util.Vector;
 
 public class MathUtils {
+    public static float SIN(float x) {
+        return (float) java.lang.Math.sin((float) x * 3.14159 / 180);
+    }
+    public static float COS(float x) {
+        return (float) java.lang.Math.cos((float) x * 3.14159 / 180);
+    }
 
-    /**
-     * get the vector length
-     *
-     * @param v
-     * @return
-     */
-    public static float vectorLen(Vector<Float> v) {
-        return (float) Math.sqrt(Math.pow(v.get(0), 2)
-                + Math.pow(v.get(1), 2) + Math.pow(v.get(2), 2));
+    public static float[] subVectors(float[] x, float[] y) {
+        float[] result = new float[3];
+        result[0] = x[0] - y[0];
+        result[1] = x[1] - y[1];
+        result[2] = x[2] - y[2];
+        return result;
+    }
+
+    public static float[] addVectors(float[] x, float[] y) {
+        float[] result = new float[3];
+        result[0] = x[0] + y[0];
+        result[1] = x[1] + y[1];
+        result[2] = x[2] + y[2];
+        return result;
     }
 
     /**
@@ -25,6 +36,17 @@ public class MathUtils {
     public static float vectorLen(float[] v) {
         return (float) Math.sqrt(Math.pow(v[0], 2)
                 + Math.pow(v[1], 2) + Math.pow(v[2], 2));
+    }
+
+    /**
+     * get the vector length
+     *
+     * @param v
+     * @return
+     */
+    public static float vectorLen(Vector<Float> v) {
+        return (float) Math.sqrt(Math.pow(v.get(0), 2)
+                + Math.pow(v.get(1), 2) + Math.pow(v.get(2), 2));
     }
 
     /**
@@ -44,13 +66,6 @@ public class MathUtils {
         return nornVector;
     }
 
-    public static float SIN(float x) {
-        return (float) java.lang.Math.sin((float) x * 3.14159 / 180);
-    }
-
-    public static float COS(float x) {
-        return (float) java.lang.Math.cos((float) x * 3.14159 / 180);
-    }
 
     /**
      * calculate the cross product of the vectors v1, v2
@@ -96,23 +111,6 @@ public class MathUtils {
         result[0] = x[0] * s;
         result[1] = x[1] * s;
         result[2] = x[2] * s;
-        return result;
-    }
-
-    public static float[] subVectors(float[] x, float[] y) {
-        float[] result = new float[3];
-        result[0] = x[0] - y[0];
-        result[1] = x[1] - y[1];
-        result[2] = x[2] - y[2];
-        return result;
-    }
-
-
-    public static float[] addVectors(float[] x, float[] y) {
-        float[] result = new float[3];
-        result[0] = x[0] + y[0];
-        result[1] = x[1] + y[1];
-        result[2] = x[2] + y[2];
         return result;
     }
 
