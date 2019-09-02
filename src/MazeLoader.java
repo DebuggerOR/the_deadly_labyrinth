@@ -61,9 +61,9 @@ public class MazeLoader {
             System.exit(1);
         }
 
-        // Go through the data and create the maze
+        // go through the data and create the maze
         ArrayList<Cell> maze = new ArrayList<Cell>();
-        // Iterate through each cell in the grid
+        // iterate through each cell in the grid
         for (int i = 0; i < _dimensions[0]; ++i) {
             for (int j = 0; j < _dimensions[1]; ++j) {
                 // If that space in the grid is not occupied...
